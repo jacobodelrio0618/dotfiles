@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# 1. Enable 32-bit architecture (Required for Wine)
-sudo dpkg --add-architecture i386
-
 # 2. Update repositories
 sudo apt update
 
