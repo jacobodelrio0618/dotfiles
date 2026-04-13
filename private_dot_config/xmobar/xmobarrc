@@ -1,0 +1,34 @@
+Config { font = "CaskaydiaCove Nerd Font 11"
+       , additionalFonts = ["DejaVu Sans Mono italic 9"]
+       , borderColor = "#161616"
+       , border = FullB
+       , bgColor =  "#161616"
+       , fgColor = "#f2f4f8"
+       , alpha = 255
+       , position = TopSize L 100 30
+       , textOffset = 0 
+       , iconOffset = 0
+       , lowerOnStart = True
+       , pickBroadest = False
+       , persistent = False
+       , hideOnStart = False
+       , iconRoot = "."
+       , allDesktops = True
+       , overrideRedirect = True
+       , textOutputFormat = Ansi
+       , commands = [ 
+                      Run Date "%d-%m-%Y, %H:%M" "date" 1
+                    , Run Com "/home/jacobodelrio/.config/xmobar/wireless.sh" [] "wifi" 40
+                    , Run Volume "default" "Master" [] 1
+                    , Run BatteryP ["BAT1"]
+                        [ "-t", "Bat: <left>% <acstatus>"
+                        , "--", "-O", "<fc=green>[on]</fc>"  -- AC connected / charging
+                        , "-o", "<fc=red>[off]</fc>"         -- AC not connected / discharging
+                        ] 10
+                    , Run Kbd []
+                    , Run StdinReader 
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "  %date%  |  %battery%  |  %default:Master% |  %StdinReader%}{Kbd: %kbd%  |  %wifi%  "
+       }
