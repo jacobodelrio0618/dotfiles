@@ -33,7 +33,6 @@ vim.cmd [[
   Plug 'folke/snacks.nvim'
   Plug 'lewis6991/gitsigns.nvim'
   Plug 'MunifTanjim/prettier.nvim'
-  Plug 'xvzc/chezmoi.nvim'
   Plug 'nvimtools/none-ls.nvim'
   call plug#end()
 ]]
@@ -106,21 +105,7 @@ local function scale_alacritty(size)
     vim.fn.jobstart(cmd)
 end
 
--- Chezmoi
-
-require("chezmoi").setup({
-    -- This allows chezmoi.nvim to automatically apply changes on save
-    edit = {
-        watch = true,
-        force = false,
-    },
-    notification = {
-        on_open = true,
-        on_apply = true,
-    },
-})
-
-local is_font_big = false
+local is_font_big = true
 
 vim.keymap.set('n', '<F2>', function()
     if is_font_big then
@@ -138,21 +123,6 @@ end, { desc = "Toggle Alacritty Font Size" })
 
 vim.o.guifont = "JetBrainsMono Nerd Font Mono:h10.5"
 vim.opt.linespace = 2
-vim.g.neovide_cursor_trail_size = 0
-vim.g.neovide_no_idle = true
-vim.g.neovide_no_vsync = true
-vim.g.neovide_refresh_rate = 180
-vim.g.neovide_idle_refresh_rate = 5
-vim.g.neovide_cursor_short_animation_length=0.130
-vim.keymap.set('n', '<F9>', ToggleDarkMode, { noremap = true, silent = true })
-
--- if vim.g.neovide then
---     -- MSI Monitor (14.5)
---     vim.keymap.set('n', '<leader>jb', ':lua vim.o.guifont = "CaskaydiaCove Nerd Font:h12.5"<CR>', { silent = true, desc = "Font Big (MSI)" })
---
---     -- Laptop Monitor (10.5)
---     vim.keymap.set('n', '<leader>js', ':lua vim.o.guifont = "CaskaydiaCove Nerd Font:h10.5"<CR>', { silent = true, desc = "Font Small (Laptop)" })
--- end
 
 -- Noice
 
@@ -624,19 +594,27 @@ blink_cmp.setup({
 require("nvim-surround").setup({})
 
 -- Telescope Setup
+
 require('telescope').setup{
-extensions = {
+  extensions = {
     bibtex = {
       citation_format = "plain",
       format = "plain",
       backend = "biber",
       include_bib_files_in_preview = true,
+    },
+    -- If you use file_browser, you can add its config here too
+    file_browser = {
+      theme = "ivy",
+      hijack_netrw = true,
     }
   }
 }
+
+-- Load the extensions
 require('telescope').load_extension('bibtex')
 require("telescope").load_extension("file_browser")
-require("telescope").load_extension("chezmoi")
+
 -- SNIPE
 
 local ok, snipe = pcall(require, "snipe")
@@ -705,75 +683,6 @@ snipe.setup({
     },
    },
 })
-
--- -- Snipe setup
--- local ok, snipe = pcall(require, "snipe")
--- if not ok then
---   return
--- end
---
--- local function filename_no_ext(buf)
---   local name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf.id), ":t")
---   local name_no_ext = name:match("(.+)%..+$") or name
---   return name_no_ext
--- end
---
--- local function buffer_modified(buf)
---   if vim.api.nvim_buf_is_valid(buf.id) and vim.api.nvim_buf_is_loaded(buf.id) then
---     if vim.bo[buf.id].modified then
---       return "●"
---     end
---   end
---   return ""
--- end
---
--- local function buffer_filetype(buf)
---   if vim.api.nvim_buf_is_valid(buf.id) and vim.api.nvim_buf_is_loaded(buf.id) then
---     local ft = vim.bo[buf.id].filetype
---     return (ft ~= "" and ft or "noft")
---   end
---   return "noft"
--- end
---
--- snipe.setup({
---   ui = {
---     position = "center",
---     open_win_override = {
---         title = " Buffers ",
---     	border = "rounded"
---     },
---     buffer_format = {
--- 	  ">",         -- Optional tag marker
--- 	  "    ",
--- 	  buffer_modified,
--- 	  "   ",
--- 	  filename_no_ext,
--- 	  "   ",
--- 	  "icon",       -- Filetype icon
--- 	  " ",
--- 	  buffer_filetype,
---     },
---     text_align = "file-first",
---   },
---   navigate = {
---     -- Specifies the "leader" key
---     -- This allows you to select a buffer but defer the action.
---     -- NOTE: this does not override your actual leader key!
---     leader = "\\",
---     cancel_snipe = "<esc>",
---
---     -- Leader map defines keys that follow a selection prefixed by the
---     -- leader key. For example (with tag "a"):
---     -- ,ad -> run leader_map["d"](m, i)
---     -- NOTE: the leader_map cannot specify multi character bindings.
---     leader_map = {
---       ["d"] = function (m, i) require("snipe").close_buf(m, i) end,
---       ["v"] = function (m, i) require("snipe").open_vsplit(m, i) end,
---       ["h"] = function (m, i) require("snipe").open_split(m, i) end,
---     },
---    },
--- })
-
 
 -- Snipe-Spell
 
