@@ -34,6 +34,8 @@ vim.cmd [[
   Plug 'lewis6991/gitsigns.nvim'
   Plug 'MunifTanjim/prettier.nvim'
   Plug 'nvimtools/none-ls.nvim'
+  Plug 'edluffy/hologram.nvim'
+  Plug 'Vaisakhkm2625/hologram-math-preview.nvim'
   call plug#end()
 ]]
 
@@ -119,10 +121,21 @@ vim.keymap.set('n', '<F2>', function()
     end
 end, { desc = "Toggle Alacritty Font Size" })
 
--- GUI config
+-- Hologram
+-- Initialize Hologram (The image engine)
+require('hologram').setup{
+    auto_display = true -- This must be true for the math to show up
+}
 
-vim.o.guifont = "JetBrainsMono Nerd Font Mono:h10.5"
-vim.opt.linespace = 2
+-- Initialize the Math Preview
+require('hologram-math-preview').setup({
+    -- Use tectonic since we added it to your install script
+    tex_engine = "tectonic", 
+    -- This helps clear the preview when you move the cursor away
+    virt_text = "Previewing...",
+    -- Default rendering command (pdftocairo was in your script)
+    render_cmd = "pdftocairo",
+})
 
 -- Noice
 
