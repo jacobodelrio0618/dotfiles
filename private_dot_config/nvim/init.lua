@@ -636,7 +636,7 @@ extensions = {
 }
 require('telescope').load_extension('bibtex')
 require("telescope").load_extension("file_browser")
-
+require("telescope").load_extension("chezmoi")
 -- SNIPE
 
 local ok, snipe = pcall(require, "snipe")
