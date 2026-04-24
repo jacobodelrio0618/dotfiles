@@ -33,6 +33,7 @@ vim.cmd [[
   Plug 'folke/snacks.nvim'
   Plug 'lewis6991/gitsigns.nvim'
   Plug 'MunifTanjim/prettier.nvim'
+  Plug 'xvzc/chezmoi.nvim'
   Plug 'nvimtools/none-ls.nvim'
   call plug#end()
 ]]
@@ -105,15 +106,19 @@ local function scale_alacritty(size)
     vim.fn.jobstart(cmd)
 end
 
--- -- MSI Monitor Shortcut (Big)
--- vim.keymap.set('n', '<leader>jb', function()
---     scale_alacritty(11.5)
--- end, { desc = "Terminal Font Big (MSI)" })
---
--- -- Laptop Monitor Shortcut (Small)
--- vim.keymap.set('n', '<leader>js', function()
---     scale_alacritty(9.5)
--- end, { desc = "Terminal Font Small (Laptop)" })
+-- Chezmoi
+
+require("chezmoi").setup({
+    -- This allows chezmoi.nvim to automatically apply changes on save
+    edit = {
+        watch = true,
+        force = false,
+    },
+    notification = {
+        on_open = true,
+        on_apply = true,
+    },
+})
 
 local is_font_big = false
 
@@ -835,8 +840,6 @@ dashboard.section.buttons.val = {
   dashboard.button("f", "  Find File", ":Telescope find_files<CR>"),
   dashboard.button("r", "󰥔  Recent Files", ":Telescope oldfiles<CR>"),
   dashboard.button("b", "  Browse Files", ":Telescope file_browser<CR>"),
-  dashboard.button("c", "  Configuration", ":e $MYVIMRC<CR>"),
-  dashboard.button("q", "  Quit", ":qa<CR>"),
 }
 
 alpha.setup(dashboard.config)
