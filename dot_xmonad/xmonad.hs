@@ -16,7 +16,7 @@ import qualified Data.Map       as M
 
 ------------------------------------------------------------------------
 -- Basic config
-myTerminal      = "alacritty"
+myTerminal      = "kitty"
 myFocusFollowsMouse :: Bool
 myFocusFollowsMouse = False
 myClickJustFocuses :: Bool
