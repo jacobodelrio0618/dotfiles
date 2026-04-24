@@ -234,15 +234,6 @@ local builtin = require('telescope.builtin')
 -- \fr : Search through recently opened files (oldfiles)
 vim.keymap.set('n', '<leader>fr', builtin.oldfiles, { desc = "Telescope recent files" })
 
--- \fc : Search specifically within your Neovim configuration folder
-vim.keymap.set('n', '<leader>fc', function()
-    builtin.find_files({
-        cwd = vim.fn.stdpath("config"),
-        prompt_title = "Config Files",
-        hidden = true -- Ensure you see your .lua and hidden config files
-    })
-end, { desc = "Telescope Neovim config" })
-
 -- Formatting mappings
 
 local function get_cursor_byte_offset()
