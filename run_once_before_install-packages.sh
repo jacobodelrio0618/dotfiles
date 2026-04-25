@@ -9,8 +9,7 @@ sudo apt install -y \
     xmonad libghc-xmonad-contrib-dev xmobar \
     polybar picom kitty rofi hsetroot \
     sioyek zathura brightnessctl xbacklight \
-    build-essential cmake pkg-config python3-pip npm \
-    poppler-utils ripgrep fd-find
+    build-essential cmake pkg-config python3-pip npm 
 
 # 4. Install Neovim "Bridges" (The stuff that makes plugins work)
 # Using pipx or pip depending on Ubuntu version; 24.04 prefers pipx or venv
@@ -18,10 +17,3 @@ python3 -m pip install --user pynvim neovim-remote --break-system-packages || \
 pip install --user pynvim neovim-remote
 
 sudo npm install -g neovim tree-sitter-cli
-
-# Install Tectonic for lightweight LaTeX rendering
-if ! command -v tectonic &> /dev/null; then
-    curl --proto '=https' --tlsv1.2 -sSf https://tectonic-typesetting.github.io/install-sh | sh
-    # Ensure it's in a path Neovim can see
-    sudo mv tectonic /usr/local/bin/
-fi

@@ -26,7 +26,7 @@ vim.cmd [[
   Plug 'neovim/nvim-lspconfig'
   Plug 'williamboman/mason.nvim'
   Plug 'williamboman/mason-lspconfig.nvim'
-  Plug 'goolord/alpha-nvim'
+  "Plug 'goolord/alpha-nvim'
   Plug 'folke/which-key.nvim'
   Plug 'kylechui/nvim-surround'
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -34,8 +34,6 @@ vim.cmd [[
   Plug 'lewis6991/gitsigns.nvim'
   Plug 'MunifTanjim/prettier.nvim'
   Plug 'nvimtools/none-ls.nvim'
-  Plug 'edluffy/hologram.nvim'
-  Plug 'Vaisakhkm2625/hologram-math-preview.nvim'
   call plug#end()
 ]]
 
@@ -120,22 +118,6 @@ vim.keymap.set('n', '<F2>', function()
         print("Font scaled to Big (11.5)")
     end
 end, { desc = "Toggle Alacritty Font Size" })
-
--- Hologram
--- Initialize Hologram (The image engine)
-require('hologram').setup{
-    auto_display = true -- This must be true for the math to show up
-}
-
--- Initialize the Math Preview
-require('hologram-math-preview').setup({
-    -- Use tectonic since we added it to your install script
-    tex_engine = "tectonic", 
-    -- This helps clear the preview when you move the cursor away
-    virt_text = "Previewing...",
-    -- Default rendering command (pdftocairo was in your script)
-    render_cmd = "pdftocairo",
-})
 
 -- Noice
 
@@ -418,7 +400,7 @@ vim.opt.spelllang = { "en_gb", "it" }
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
-vim.opt.conceallevel = 0
+vim.opt.conceallevel = 0 
 vim.opt.scrolloff = 3
 vim.opt.sidescrolloff = 3
 vim.opt.statusline = " "
@@ -701,70 +683,70 @@ snipe.setup({
 
 require("snipe-spell").setup()
 
--- Alpha nvim dashboard
-local alpha = require("alpha")
-local dashboard = require("alpha.themes.dashboard")
+-- -- Alpha nvim dashboard
+-- local alpha = require("alpha")
+-- local dashboard = require("alpha.themes.dashboard")
+--
+-- -- Save the original values of the options
+-- local original_laststatus = vim.o.laststatus
+-- local original_showtabline = vim.o.showtabline
+--
+-- -- 1. On AlphaReady: Hide statusline
+-- vim.api.nvim_create_autocmd("User", {
+--   pattern = "AlphaReady",
+--   group = vim.api.nvim_create_augroup("Alpha_UI_Hide", { clear = true }),
+--   callback = function()
+--     -- Hide the statusline (0: never, 1: only if split, 2: always)
+--     vim.opt.laststatus = 0
+--   end,
+-- })
+--
+-- -- 2. On BufUnload (when leaving the alpha buffer): Restore original values
+-- -- BufUnload fires when the buffer is closed, which happens when you open a file
+-- vim.api.nvim_create_autocmd("BufUnload", {
+--   -- The Alpha buffer is usually buffer #1 (or 0 depending on the setup)
+--   -- The check below ensures we only run the restore when leaving the alpha buffer.
+--   -- You can check the buffer number when alpha is open with `:echo bufnr()`
+--   buffer = 1, -- Change this number if your alpha buffer is different
+--   group = vim.api.nvim_create_augroup("Alpha_UI_Restore", { clear = true }),
+--   callback = function()
+--     -- Restore the original statusline setting
+--     vim.opt.laststatus = original_laststatus
+--
+--   end,
+-- })
 
--- Save the original values of the options
-local original_laststatus = vim.o.laststatus
-local original_showtabline = vim.o.showtabline
-
--- 1. On AlphaReady: Hide statusline
-vim.api.nvim_create_autocmd("User", {
-  pattern = "AlphaReady",
-  group = vim.api.nvim_create_augroup("Alpha_UI_Hide", { clear = true }),
-  callback = function()
-    -- Hide the statusline (0: never, 1: only if split, 2: always)
-    vim.opt.laststatus = 0
-  end,
-})
-
--- 2. On BufUnload (when leaving the alpha buffer): Restore original values
--- BufUnload fires when the buffer is closed, which happens when you open a file
-vim.api.nvim_create_autocmd("BufUnload", {
-  -- The Alpha buffer is usually buffer #1 (or 0 depending on the setup)
-  -- The check below ensures we only run the restore when leaving the alpha buffer.
-  -- You can check the buffer number when alpha is open with `:echo bufnr()`
-  buffer = 1, -- Change this number if your alpha buffer is different
-  group = vim.api.nvim_create_augroup("Alpha_UI_Restore", { clear = true }),
-  callback = function()
-    -- Restore the original statusline setting
-    vim.opt.laststatus = original_laststatus
-    
-  end,
-})
-
-dashboard.section.header.val = {
-  "                                                    █           ",
-  "          █                                        █            ",
-  "           █    █                                  █            ",
-  "        █  █                             █    █   ██  █        ",
-  "        ██ █     █            ██        ██   █    ██ █         ",
-  "         ███   ██          ██ ██ █     ████ ███   ████         ",
-  "          ███  ███████████████████    █████████   ████         ",
-  "          ███  ██  ██   ███ ██████   ███ ██ ███  █████         ",
-  "          ████ ███ ██   ███  ██ ██   ██  ██ ████ ████          ",
-  "          ██ █  █  ████ ██   ██ ███ ███  ██ ██████ ██ █        ",
-  "         ███ █████ ██   ███  ██  ██ ██   ██ ██ ███ ███         ",
-  "          ██  ███  ██ █████ ███  █████   ██ ██  █  ██          ",
-  "          ██   █████████ █████    ████  ███████    ███         ",
-  "         ███   ███         █      ███       ███    ███         ",
-  "        █████    █████                    ██      █████        ",
-  "       ██    █      ████                 █       ██   ██       ",
-  "       █      ██                               ██      █       ",
-  "       █                                     █         █       ",
-  "        █                                             █        ",
-
-}
-
--- Buttons menu (example shortcuts)
-dashboard.section.buttons.val = {
-  dashboard.button("f", "  Find File", ":Telescope find_files<CR>"),
-  dashboard.button("r", "󰥔  Recent Files", ":Telescope oldfiles<CR>"),
-  dashboard.button("b", "  Browse Files", ":Telescope file_browser<CR>"),
-}
-
-alpha.setup(dashboard.config)
+-- dashboard.section.header.val = {
+--   "                                                    █           ",
+--   "          █                                        █            ",
+--   "           █    █                                  █            ",
+--   "        █  █                             █    █   ██  █        ",
+--   "        ██ █     █            ██        ██   █    ██ █         ",
+--   "         ███   ██          ██ ██ █     ████ ███   ████         ",
+--   "          ███  ███████████████████    █████████   ████         ",
+--   "          ███  ██  ██   ███ ██████   ███ ██ ███  █████         ",
+--   "          ████ ███ ██   ███  ██ ██   ██  ██ ████ ████          ",
+--   "          ██ █  █  ████ ██   ██ ███ ███  ██ ██████ ██ █        ",
+--   "         ███ █████ ██   ███  ██  ██ ██   ██ ██ ███ ███         ",
+--   "          ██  ███  ██ █████ ███  █████   ██ ██  █  ██          ",
+--   "          ██   █████████ █████    ████  ███████    ███         ",
+--   "         ███   ███         █      ███       ███    ███         ",
+--   "        █████    █████                    ██      █████        ",
+--   "       ██    █      ████                 █       ██   ██       ",
+--   "       █      ██                               ██      █       ",
+--   "       █                                     █         █       ",
+--   "        █                                             █        ",
+--
+-- }
+--
+-- -- Buttons menu (example shortcuts)
+-- dashboard.section.buttons.val = {
+--   dashboard.button("f", "  Find File", ":Telescope find_files<CR>"),
+--   dashboard.button("r", "󰥔  Recent Files", ":Telescope oldfiles<CR>"),
+--   dashboard.button("b", "  Browse Files", ":Telescope file_browser<CR>"),
+-- }
+--
+-- alpha.setup(dashboard.config)
 
 -- Enable auto-commands for indent and tab settings in specific filetypes
 vim.cmd [[
