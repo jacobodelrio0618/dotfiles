@@ -1,4 +1,4 @@
-# general.ipc_socket = true
+general.ipc_socket = true
 
 [font]
 normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
