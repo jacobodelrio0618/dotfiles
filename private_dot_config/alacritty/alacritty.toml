@@ -1,0 +1,29 @@
+# general.ipc_socket = true
+
+[font]
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+size = 11.5
+
+[font.offset]
+x = 0
+y = 5
+
+[font.glyph_offset]
+x = 0
+y = 2
+
+[window]
+# This takes the 'remainder' pixels and splits them 
+# between the top, bottom, left, and right.
+dynamic_padding = true
+
+# You should also set some base padding so the text 
+# isn't touching the window edges on the laptop screen.
+padding = { x = 0, y = 0 }
+
+decorations = "full"
+# Some window managers ignore this, but it's worth a shot:
+resize_increments = true
+
+[colors.primary]
+background = "#000000"
