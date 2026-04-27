@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: bq
+# key: bq
+# condition: t
+# --
+%
+\begin{bqenv}
+[{{\autocite[${2:page}]{${1:key}}}}]%
+  $3
+\end{bqenv}$4 %
+%
+$0
