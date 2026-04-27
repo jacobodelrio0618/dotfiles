@@ -122,14 +122,20 @@
   (setq ispell-program-name "hunspell")
   (setq ispell-dictionary "it_IT"))
 
-  (add-hook 'prog-mode-hook
-      (lambda ()
-        (setq ispell-parser 'tex)
-        (flyspell-prog-mode)))
+;; Flyspell Disabled by Default. No Lines Below Words.
+(add-hook 'LaTeX-mode-hook
+          (lambda ()
+            (flyspell-mode -1)))
 
 ;; Minimap
 (after! demap
   (add-hook 'TeX-mode-hook #'demap-open))
+
+;; Optimization
+(setq corfu-auto-delay 0.2) ;; Wait 0.2s before showing suggestions
+(blink-cursor-mode 0)
+(setq-default bidi-display-reordering nil)
+
 ;; =========================
 ;; LaTeX & Zathura SyncTeX
 ;; =========================
@@ -138,7 +144,11 @@
   ;; --- 1. Zathura & SyncTeX Setup ---
   (setq TeX-source-correlate-mode t
         TeX-source-correlate-method 'synctex
-        TeX-source-correlate-start-server t)
+        TeX-source-correlate-start-server t
+        TeX-command-default "LatekMk"
+        TeX-electric-sub-and-superscript t
+        TeX-fold-mode nil
+        )
 
   (add-to-list 'TeX-view-program-list
                '("Zathura"
@@ -148,6 +158,9 @@
 
   (setq TeX-view-program-selection '((output-pdf "Zathura"))))
 
+  ;; Smart Keyboard Movement In Brackets
+  (map! :map cdlatex-mode-map
+      :i "<tab>" #'cdlatex-tab)
 ;; =========================
 ;; Citar Bibliography
 ;; =========================
