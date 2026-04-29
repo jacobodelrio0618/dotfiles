@@ -127,12 +127,14 @@
           (lambda ()
             (flyspell-mode -1)))
 
-;; Minimap
-(after! demap
-  (add-hook 'TeX-mode-hook #'demap-open))
+;; Completion
+ (after! corfu
+  (setq corfu-auto t
+        corfu-auto-delay 0.25
+        corfu-auto-prefix 2)
+  (map! :i "C-c f" #'cape-file))
 
 ;; Optimization
-(setq corfu-auto-delay 0.2) ;; Wait 0.2s before showing suggestions
 (blink-cursor-mode 0)
 (setq-default bidi-display-reordering nil)
 
@@ -141,11 +143,10 @@
 ;; =========================
 
 (after! latex
-  ;; --- 1. Zathura & SyncTeX Setup ---
   (setq TeX-source-correlate-mode t
         TeX-source-correlate-method 'synctex
         TeX-source-correlate-start-server t
-        TeX-command-default "LatekMk"
+        TeX-command-default "LatexMk"
         TeX-electric-sub-and-superscript t
         TeX-fold-mode nil
         )
@@ -158,15 +159,50 @@
 
   (setq TeX-view-program-selection '((output-pdf "Zathura"))))
 
-  ;; Smart Keyboard Movement In Brackets
+;; Math-modify from "'" to "\", better for Italian.
+(after! cdlatex
+  ;; Update the variables for internal logic
+  (setq cdlatex-math-modify-prefix ?\\)
+
+  ;; Manually map the backslash to the math triggers
   (map! :map cdlatex-mode-map
-      :i "<tab>" #'cdlatex-tab)
+        :i "\\" #'cdlatex-math-modify
+        :i "'"  nil)
+  (define-key cdlatex-mode-map "'" nil))
+
+;; Smart <tab> key
+(defun my-latex-tab-handler ()
+  "Smart Tab: expand → yas field → cdlatex → completion → indent."
+  (interactive)
+  (cond
+
+   ;; Try expanding a snippet
+   ((and (bound-and-true-p yas-minor-mode)
+         (yas-expand)))
+
+   ;; If inside an active yasnippet field → jump to next field
+   ((and (bound-and-true-p yas-minor-mode)
+         (yas--snippets-at-point))
+    (yas-next-field))
+
+   ;; Cdlatex handling
+   ((bound-and-true-p cdlatex-mode)
+    (cdlatex-tab))
+
+   ;; Fallback
+   (t
+    (indent-for-tab-command))))
+
+(map! :map cdlatex-mode-map
+    :i "<tab>" #'my-latex-tab-handler)
+(map! :i "<backtab>" #'indent-for-tab-command)
+
 ;; =========================
 ;; Citar Bibliography
 ;; =========================
 
 (after! citar
-  ;; 1. The upward search logic
+  ;; The upward search logic
   (defun my/set-citar-bib-upwards ()
     "Search upwards for bibliography.bib and set it locally."
     (let ((bib-path (locate-dominating-file default-directory "bibliography.bib")))
@@ -174,18 +210,22 @@
           (setq-local citar-bibliography (list (expand-file-name "bibliography.bib" bib-path)))
         (message "Citar: bibliography.bib not found in parent folders"))))
 
-  ;; 2. The hook to apply the bib path
+  ;; The hook to apply the bib path
   (add-hook 'TeX-mode-hook
             (lambda ()
               (my/set-citar-bib-upwards))))
 
 ;; =========================
-;; Prettier Formatting
+;; Snippets (Only Custom)
 ;; =========================
 
 (after! yasnippet
-  (setq yas-triggers-in-field t))
-(add-hook 'TeX-mode-hook #'yas-minor-mode)
+  (setq yas-snippet-dirs
+        (list (expand-file-name "~/.config/doom/snippets")))
+  (yas-reload-all)
+  (yas-minor-mode -1)
+  (yas-minor-mode +1)
+  )
 
 ;; =========================
 ;; Prettier Formatting
