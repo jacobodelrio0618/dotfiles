@@ -36,6 +36,13 @@ return {
         _G.vimtex_compile_status_icon = " "
       end,
     })
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "VimtexEventCompileStopped",
+      group = group,
+      callback = function()
+        _G.vimtex_compile_status_icon = " "
+      end,
+    })
   end,
 
   opts = function()
@@ -51,12 +58,14 @@ return {
         disabled_filetypes = { statusline = { "dashboard", "alpha", "ministarter", "snacks_dashboard" } },
       },
       sections = {
-        lualine_a = { {
-          "mode",
-          fmt = function(str)
-            return str:sub(1, 1)
-          end,
-        } },
+        lualine_a = {
+          {
+            "mode",
+            fmt = function(str)
+              return str:sub(1, 1)
+            end,
+          },
+        },
         lualine_b = {},
         lualine_c = {
           LazyVim.lualine.root_dir(),

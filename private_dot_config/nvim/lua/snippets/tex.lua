@@ -10,16 +10,16 @@ end
 
 return {
 
-  s("\\1", { t("{"), i(1), t("}"), i(0) }),
-  s("\\2", { t("["), i(1), t("]"), i(0) }),
-  s("\\3", { t("("), i(1), t(")"), i(0) }),
+  -- s("\\1", { t("{"), i(1), t("}"), i(0) }),
+  -- s("\\2", { t("["), i(1), t("]"), i(0) }),
+  -- s("\\3", { t("("), i(1), t(")"), i(0) }),
   s("\\m", { t("$"), i(1), t("$"), i(0) }),
   s("\\i", { t("\\textit{"), i(1), t("}"), i(0) }),
   s("\\e", { t("\\emph{"), i(1), t("}"), i(0) }),
   s("\\q", { t("\\bsq{"), i(1), t("}"), i(0) }),
 
   -- Environments
-  s("\\qe", {
+  s("bse", {
     t({ "%", "" }), -- 1) Comment sign and 2) New line
     t("\\begin{bsqenv}"), -- Start of environment
     t({ "", "  " }), -- New line and 2 spaces of indentation
@@ -31,7 +31,7 @@ return {
     i(0), -- Final position to keep typing
   }),
 
-  s("\\bq", {
+  s("bqu", {
     t({ "\\begin{bqenv}", "" }), -- 1) Comment signs + 2) New line & start
     t("[{{\\autocite["), -- Start of autocite
     i(2), -- Tabstop 2: Page/Postnote
@@ -45,7 +45,7 @@ return {
     t(" %"), -- Comment sign
   }),
 
-  s("\\tq", {
+  s("tqu", {
     t({ "%", "\\begin{textqenv}", "  " }), -- 1) Comment + Start + 2 spaces indent
     i(1), -- Tabstop 1: Environment content
     t({ "", "\\end{textqenv}" }), -- End of environment
@@ -56,7 +56,7 @@ return {
   }),
   -- BibLaTeX and quotes
 
-  s("\\b1", {
+  s("bq1", {
     t({ "", "%", "\\blockquote[{\\autocite[" }),
     i(2),
     t("]{"),
@@ -68,7 +68,7 @@ return {
     i(0),
   }),
 
-  s("\\ac", {
+  s("auc", {
     t({ " %", "\\autocite[" }),
     i(2),
     t("]{"),
@@ -79,8 +79,8 @@ return {
     i(0),
   }),
 
-  s("\\cfr", {
-    t({ " %", "\\autocite[" }),
+  s("cfr", {
+    t({ " %", "\\autocite[\\autocap{c}fr. " }),
     i(1),
     t("]["),
     i(3),
@@ -92,7 +92,7 @@ return {
     i(0),
   }),
 
-  s("\\ip", {
+  s("ipe", {
     t("\\InitPerson"),
     i(3),
     t("{"),
@@ -103,7 +103,7 @@ return {
     i(0),
   }),
 
-  s("\\p", {
+  s("per", {
     t("\\Person{"),
     i(1),
     t("}"),
@@ -126,7 +126,7 @@ return {
 
   -- Subfile Snippet
 
-  s("subfile", {
+  s("sub", {
     t({
       "\\documentclass[../main.tex]{subfiles}%",
       "\\ifSubfilesClassLoaded{\\addbibresource{../bibliography.bib}}{}",
@@ -144,7 +144,7 @@ return {
   }),
 
   -- Beamer Snippets
-  s("\\f", {
+  s("fra", {
     t({ "", "\\begin{frame}" }),
     i(1), -- Title position
     t({ "", "\t" }),
@@ -153,292 +153,220 @@ return {
     i(0), -- Final exit point after the frame
   }),
 
-  s("\\fb", {
-    t("\\begin{block}"),
+  s("blo", {
+    t("\\begin{block}{"),
     i(1), -- First position: Block Title
+    t("}"),
     t({ "", "\t" }),
     i(2), -- Second (and final) position: Block Content
     t({ "", "\\end{block}" }),
   }),
 
-  -- Logic - Fitch Proof
-  s("fitch", {
-    t({ "", "\\begin{align*}", "$\\begin{nd}" }),
-    t({ "", "    " }),
-    i(0),
-    t({ "", "\\end{nd}$", "\\end{align*}" }),
-  }),
-
-  s("h", {
-    t("\\hypo{"),
-    i(1, "Label"),
-    t("}{"),
-    i(2, "Formula"),
-    t("}"),
-    i(0),
-  }),
-
-  s("j", {
-    t("\\have{"),
-    i(1, "Label"),
-    t("}{"),
-    i(2, "Formula"),
-    t("}"),
-    i(0),
-  }),
-
-  s("s", {
-    t({ "\\open", "   " }),
-    i(0),
-    t({ "", "\\close" }),
-  }),
-
-  -- Ebproof synthetic
-  s("sproof", {
-    t({
-      "\\begin{prooftree}",
-      "    ",
-    }),
-    i(0),
-    t({
-      "",
-      "\\end{prooftree}",
-    }),
-  }),
-
-  s("sh", {
-    t("\\hypo{"),
-    i(1, "Formula"),
-    t({ "}%", "" }),
-    i(0),
-  }),
-
-  s("sj", {
-    t("\\infer"),
-    i(1, "From"),
-    t("[$"),
-    i(2, "Rule"),
-    t("$]{"),
-    i(3, "Formula"),
-    t({ "}%", "" }),
-    i(0),
-  }),
-
-  -- Ebproof analytic
-  s("aproof", {
-    t({
-      "\\begin{prooftree}[proof style = downwards]%",
-      "    ",
-    }),
-    i(0),
-    t({
-      "",
-      "\\end{prooftree}",
-    }),
-  }),
-
-  s("aj", {
-    i(0),
-    t({ "", "\\hypo{\\begin{gathered} " }),
-    i(1, "Formula"),
-    t({ " \\\\", "    " }),
-    i(2, "Status"),
-    t({ "", "\\end{gathered}}%" }),
-  }),
-
-  s("ah", {
-    i(0),
-    t({ "", "\\infer" }),
-    i(1, "Branching"),
-    t("[$"),
-    i(2, "Rule"),
-    t("$]{"),
-    i(3, "Formula"),
-    t("}%"),
-  }),
-
-  -- Forest trees
-  s("tree", {
-    t({ "\\begin{center}", "    \\begin{forest}", "    for tree={l sep=-2pt, l=-2pt, no edge}", "    %" }),
-    t({ "    [" }),
-    t("$ "),
-    i(1, "Formula"),
-    t({ " $%" }),
-    t({ "    [\\langle " }),
-    i(2, "Rule"),
-    t({ " \\rangle $" }),
-    i(0),
-    t({ "]", "    %", "    \\end{forest}", "\\end{center}" }),
-  }),
-
-  s("sbranch", {
-    t({ "", "    %" }),
-    t({ "    [" }),
-    t("$ "),
-    i(1, "Formula"),
-    t({ " $%" }),
-    t({ "    [\\langle " }),
-    i(2, "Rule"),
-    t({ " \\rangle $" }),
-    i(0),
-    t({ "]" }),
-  }),
-
-  s("obranch", {
-    t({ "", "%" }),
-    t({ "[" }),
-    t("$ "),
-    i(1, "Formula"),
-    t({ " $%" }),
-    t({ "[\\langle " }),
-    i(2, "Rule"),
-    t({ " \\rangle $" }),
-    i(0),
-    t({ "]" }),
-  }),
-
-  s("fbranch", {
-    t({ "%" }),
-    t({ "[" }),
-    t("$ "),
-    i(1, "Formula"),
-    t({ "]" }),
-  }),
-
-  -- Math notations
-  s("\\mf", {
-    t("\\mathfra\\{"),
-    i(1),
-    t("}"),
-    i(0),
-  }),
-
-  s("\\mc", {
-    t("\\mathcal{"),
-    i(1),
-    t("}"),
-    i(0),
-  }),
-
-  s("\\ms", {
-    t("\\mathsf{"),
-    i(1),
-    t("}"),
-    i(0),
-  }),
-
-  s("\\s1", {
-    t("^{"),
-    i(1),
-    t("}"),
-    i(0),
-  }),
-
-  s("\\s2", {
-    t("_{"),
-    i(1),
-    t("}"),
-    i(0),
-  }),
-
-  s("\\s3", {
-    t("^{"),
-    i(1),
-    t("}_{"),
-    i(2),
-    t("}"),
-    i(0),
-  }),
-
-  s("str", {
-    t("[\\stac\\rel{"),
-    i(1, "x"),
-    t("}{_{"),
-    i(2, "t"),
-    t("}}]"),
-    i(0),
-  }),
-
-  s("\\tc", {
-    t("~|~ "),
-  }),
-
-  -- Gree\\ letters and symbols
-  s({ trig = "phi", desc = "φ" }, { t("\\phi") }),
-  s({ trig = "Phi", desc = "Φ" }, { t("\\Phi") }),
-  s({ trig = "varphi", desc = "ϕ" }, { t("\\varphi") }),
-  s({ trig = "psi", desc = "ψ" }, { t("\\psi") }),
-  s({ trig = "Psi", desc = "Ψ" }, { t("\\Psi") }),
-  s({ trig = "chi", desc = "χ" }, { t("\\chi") }),
-  s({ trig = "Chi", desc = "Χ" }, { t("\\Chi") }),
-  s({ trig = "omega", desc = "ω" }, { t("\\omega") }),
-  s({ trig = "Omega", desc = "Ω" }, { t("\\Omega") }),
-  s({ trig = "alpha", desc = "α" }, { t("\\alpha") }),
-  s({ trig = "Alpha", desc = "Α" }, { t("\\Alpha") }),
-  s({ trig = "beta", desc = "β" }, { t("\\beta") }),
-  s({ trig = "Beta", desc = "Β" }, { t("\\Beta") }),
-  s({ trig = "gamma", desc = "γ" }, { t("\\gamma") }),
-  s({ trig = "Gamma", desc = "Γ" }, { t("\\Gamma") }),
-  s({ trig = "delta", desc = "δ" }, { t("\\delta") }),
-  s({ trig = "Delta", desc = "Δ" }, { t("\\Delta") }),
-  s({ trig = "epsilon", desc = "ε" }, { t("\\epsilon") }),
-  s({ trig = "Epsilon", desc = "Ε" }, { t("\\Epsilon") }),
-  s({ trig = "varepsilon", desc = "ϵ" }, { t("\\varepsilon") }),
-  s({ trig = "theta", desc = "θ" }, { t("\\theta") }),
-  s({ trig = "Theta", desc = "Θ" }, { t("\\Theta") }),
-  s({ trig = "vartheta", desc = "ϑ" }, { t("\\vartheta") }),
-  s({ trig = "lambda", desc = "λ" }, { t("\\lambda") }),
-  s({ trig = "Lambda", desc = "Λ" }, { t("\\Lambda") }),
-  s({ trig = "mu", desc = "μ" }, { t("\\mu") }),
-  s({ trig = "Mu", desc = "Μ" }, { t("\\Mu") }),
-
-  s({ trig = "xi", desc = "ξ" }, { t("\\xi") }),
-  s({ trig = "Xi", desc = "Ξ" }, { t("\\Xi") }),
-
-  s({ trig = "sigma", desc = "σ" }, { t("\\sigma") }),
-  s({ trig = "Sigma", desc = "Σ" }, { t("\\Sigma") }),
-  s({ trig = "tau", desc = "τ" }, { t("\\tau") }),
-  s({ trig = "Tau", desc = "Τ" }, { t("\\Tau") }),
-  s({ trig = "upsilon", desc = "υ" }, { t("\\upsilon") }),
-  s({ trig = "Upsilon", desc = "Υ" }, { t("\\Upsilon") }),
-
-  -- Logic symbols
-  s({ trig = "land", desc = "∧" }, { t("\\land") }),
-  s({ trig = "lor", desc = "∨" }, { t("\\lor") }),
-  s({ trig = "lnot", desc = "¬" }, { t("\\lnot") }),
-  s({ trig = "to", desc = "→" }, { t("\\to") }),
-  s({ trig = "leftrightarrow", desc = "↔" }, { t("\\leftrightarrow") }),
-  s({ trig = "equiv", desc = "≡" }, { t("\\equiv") }),
-  s({ trig = "models", desc = "⊨" }, { t("\\models") }),
-  s({ trig = "dash", desc = "⊧" }, { t("\\vDash") }),
-  s({ trig = "sdash", desc = "⊢" }, { t("\\vdash") }),
-  s({ trig = "seq", desc = "⇒" }, { t("\\Rightarrow") }),
-  s({ trig = "therefore", desc = "∴" }, { t("\\therefore") }),
-  s({ trig = "because", desc = "∵" }, { t("\\because") }),
-
-  -- Quantifiers
-  s({ trig = "fa", desc = "∀" }, { t("\\fall") }),
-  s({ trig = "ex", desc = "∃" }, { t("\\fexists") }),
+  -- -- Logic - Fitch Proof
+  -- s("fitch", {
+  --   t({ "", "\\begin{align*}", "$\\begin{nd}" }),
+  --   t({ "", "    " }),
+  --   i(0),
+  --   t({ "", "\\end{nd}$", "\\end{align*}" }),
+  -- }),
+  --
+  -- s("h", {
+  --   t("\\hypo{"),
+  --   i(1, "Label"),
+  --   t("}{"),
+  --   i(2, "Formula"),
+  --   t("}"),
+  --   i(0),
+  -- }),
+  --
+  -- s("j", {
+  --   t("\\have{"),
+  --   i(1, "Label"),
+  --   t("}{"),
+  --   i(2, "Formula"),
+  --   t("}"),
+  --   i(0),
+  -- }),
+  --
+  -- s("s", {
+  --   t({ "\\open", "   " }),
+  --   i(0),
+  --   t({ "", "\\close" }),
+  -- }),
+  --
+  -- -- Ebproof synthetic
+  -- s("sproof", {
+  --   t({
+  --     "\\begin{prooftree}",
+  --     "    ",
+  --   }),
+  --   i(0),
+  --   t({
+  --     "",
+  --     "\\end{prooftree}",
+  --   }),
+  -- }),
+  --
+  -- s("sh", {
+  --   t("\\hypo{"),
+  --   i(1, "Formula"),
+  --   t({ "}%", "" }),
+  --   i(0),
+  -- }),
+  --
+  -- s("sj", {
+  --   t("\\infer"),
+  --   i(1, "From"),
+  --   t("[$"),
+  --   i(2, "Rule"),
+  --   t("$]{"),
+  --   i(3, "Formula"),
+  --   t({ "}%", "" }),
+  --   i(0),
+  -- }),
+  --
+  -- -- Ebproof analytic
+  -- s("aproof", {
+  --   t({
+  --     "\\begin{prooftree}[proof style = downwards]%",
+  --     "    ",
+  --   }),
+  --   i(0),
+  --   t({
+  --     "",
+  --     "\\end{prooftree}",
+  --   }),
+  -- }),
+  --
+  -- s("aj", {
+  --   i(0),
+  --   t({ "", "\\hypo{\\begin{gathered} " }),
+  --   i(1, "Formula"),
+  --   t({ " \\\\", "    " }),
+  --   i(2, "Status"),
+  --   t({ "", "\\end{gathered}}%" }),
+  -- }),
+  --
+  -- s("ah", {
+  --   i(0),
+  --   t({ "", "\\infer" }),
+  --   i(1, "Branching"),
+  --   t("[$"),
+  --   i(2, "Rule"),
+  --   t("$]{"),
+  --   i(3, "Formula"),
+  --   t("}%"),
+  -- }),
+  --
+  -- -- Forest trees
+  -- s("tree", {
+  --   t({ "\\begin{center}", "    \\begin{forest}", "    for tree={l sep=-2pt, l=-2pt, no edge}", "    %" }),
+  --   t({ "    [" }),
+  --   t("$ "),
+  --   i(1, "Formula"),
+  --   t({ " $%" }),
+  --   t({ "    [\\langle " }),
+  --   i(2, "Rule"),
+  --   t({ " \\rangle $" }),
+  --   i(0),
+  --   t({ "]", "    %", "    \\end{forest}", "\\end{center}" }),
+  -- }),
+  --
+  -- s("sbranch", {
+  --   t({ "", "    %" }),
+  --   t({ "    [" }),
+  --   t("$ "),
+  --   i(1, "Formula"),
+  --   t({ " $%" }),
+  --   t({ "    [\\langle " }),
+  --   i(2, "Rule"),
+  --   t({ " \\rangle $" }),
+  --   i(0),
+  --   t({ "]" }),
+  -- }),
+  --
+  -- s("obranch", {
+  --   t({ "", "%" }),
+  --   t({ "[" }),
+  --   t("$ "),
+  --   i(1, "Formula"),
+  --   t({ " $%" }),
+  --   t({ "[\\langle " }),
+  --   i(2, "Rule"),
+  --   t({ " \\rangle $" }),
+  --   i(0),
+  --   t({ "]" }),
+  -- }),
+  --
+  -- s("fbranch", {
+  --   t({ "%" }),
+  --   t({ "[" }),
+  --   t("$ "),
+  --   i(1, "Formula"),
+  --   t({ "]" }),
+  -- }),
 }, {
   -- AUTOSNIPPETS TABLE
-  -- Trigger: ^
+
+  -- No Filter
+  --
+  --
+  s( --
+    { trig = "°", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
+    { t("{"), i(1), t("}"), i(0) } --
+  ),
+
+  s( --
+    { trig = "ç", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
+    { t("["), i(1), t("]"), i(0) } --
+  ),
+
+  s( --
+    { trig = "@", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
+    { t("("), i(1), t(")"), i(0) } --
+  ),
+
+  -- Math Mode
   s(
-    { trig = "^", wordTrig = false, snippetType = "autosnippet" },
+    { trig = "^", wordTrig = false, snippetType = "autosnippet", hidden = true },
     { t("^{"), i(1), t("}"), i(0) },
     { condition = in_math }
   ),
 
-  -- Trigger: _
   s(
-    { trig = "_", wordTrig = false, snippetType = "autosnippet" },
+    { trig = "_", wordTrig = false, snippetType = "autosnippet", hidden = true },
     { t("_{"), i(1), t("}"), i(0) },
     { condition = in_math }
   ),
 
-  -- Trigger: __ (Double underscore for the combined Super/Sub script)
   s(
-    { trig = "?", wordTrig = false, snippetType = "autosnippet" },
+
+    { trig = "?", wordTrig = false, snippetType = "autosnippet", hidden = true },
     { t("^{"), i(1), t("}_{"), i(2), t("}"), i(0) },
+    { condition = in_math }
+  ),
+
+  s(
+    { trig = "mc", wordTrig = false, snippetType = "autosnippet", hidden = true },
+    { t("\\mathcal{"), i(1), t("}"), i(0) },
+    { condition = in_math }
+  ),
+
+  s(
+    { trig = "mf", wordTrig = false, snippetType = "autosnippet", hidden = true },
+    { t("\\mathfrak{"), i(1), t("}"), i(0) },
+    { condition = in_math }
+  ),
+
+  s(
+    { trig = "mb", wordTrig = false, snippetType = "autosnippet", hidden = true },
+    { t("\\mathbb{"), i(1), t("}"), i(0) },
+    { condition = in_math }
+  ),
+
+  s(
+    { trig = "ms", wordTrig = false, snippetType = "autosnippet", hidden = true },
+    { t("\\mathsf{"), i(1), t("}"), i(0) },
     { condition = in_math }
   ),
 }

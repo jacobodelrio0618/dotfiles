@@ -34,19 +34,32 @@ end)
 -- =========================
 -- Snippets
 -- =========================
-
 local ls = require("luasnip")
 
+-- Expand snippet with Ctrl+S
 vim.keymap.set({ "i" }, "<C-S>", function()
   ls.expand()
 end, { silent = true })
+
+-- Conditional Tab: Jump if possible, otherwise indent
 vim.keymap.set({ "i", "s" }, "<Tab>", function()
-  ls.jump(1)
-end, { silent = true })
-vim.keymap.set({ "i", "s" }, "<S-Tab>", function()
-  ls.jump(-1)
+  if ls.expand_or_jumpable() then
+    ls.jump(1)
+  else
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Tab>", true, false, true), "n", false)
+  end
 end, { silent = true })
 
+-- Conditional Shift-Tab: Jump back if possible, otherwise outdent
+vim.keymap.set({ "i", "s" }, "<S-Tab>", function()
+  if ls.jumpable(-1) then
+    ls.jump(-1)
+  else
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<S-Tab>", true, false, true), "n", false)
+  end
+end, { silent = true })
+
+-- Choice nodes
 vim.keymap.set({ "i", "s" }, "<C-E>", function()
   if ls.choice_active() then
     ls.change_choice(1)

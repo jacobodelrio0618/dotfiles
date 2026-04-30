@@ -4,3 +4,12 @@
 
 vim.opt.spelllang = { "it", "en_gb" }
 vim.opt.textwidth = 90
+vim.opt.wrap = true
+vim.opt.linebreak = true
+vim.opt.breakindent = true
+vim.opt.showbreak = "↳ "
+vim.opt.statuscolumn = " %l "
+vim.opt.expandtab = true
+vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
+vim.opt.shiftwidth = 2
