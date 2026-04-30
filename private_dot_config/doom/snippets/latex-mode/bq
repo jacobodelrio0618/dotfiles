@@ -1,12 +1,11 @@
 # -*- mode: snippet -*-
-# name: bq
+# name: blockquote
 # key: bq
 # condition: t
+# expand-env: ((yas-indent-line 'auto))
 # --
-%
 \begin{bqenv}
-[{{\autocite[${2:page}]{${1:key}}}}]%
+  [{{\autocite[${2:page}]{${1:key}}}}]%
   $3
-\end{bqenv}$4 %
-%
-$0
+\end{bqenv}
+  $0

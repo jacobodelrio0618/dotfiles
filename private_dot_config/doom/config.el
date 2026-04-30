@@ -99,7 +99,6 @@
       doom-variable-pitch-font (font-spec :family "JetBrainsMono Nerd Font" :size 14))
 
 ;; Aesthetic Tweaks for Single Screen
-(setq display-line-numbers-type t) ; Or 'relative if you prefer
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode) ; Optional: removes the grey line highlight for a "pure" black look
 
 ;; Line Numbers
@@ -138,6 +137,9 @@
 (blink-cursor-mode 0)
 (setq-default bidi-display-reordering nil)
 
+;; TOC level
+(after! reftex
+  (setq reftex-toc-max-level 3))
 ;; =========================
 ;; LaTeX & Zathura SyncTeX
 ;; =========================
@@ -150,19 +152,29 @@
         TeX-electric-sub-and-superscript t
         TeX-fold-mode nil
         )
-
+  (setq LaTeX-indent-level 2
+        LaTeX-item-indent 0
+        +latex-indent-item-continuation-offset 'auto
+        )
   (add-to-list 'TeX-view-program-list
                '("Zathura"
                  ("zathura %o"
                   (mode-io-correlate " --synctex-forward %n:0:\"%b\""))
                  "zathura"))
-
+  (add-hook 'LaTeX-mode-hook
+                (lambda ()
+                 (setq-local indent-line-function #'LaTeX-indent-line)))
   (setq TeX-view-program-selection '((output-pdf "Zathura"))))
 
 ;; Math-modify from "'" to "\", better for Italian.
 (after! cdlatex
   ;; Update the variables for internal logic
-  (setq cdlatex-math-modify-prefix ?\\)
+  (setq cdlatex-math-modify-prefix ?\\
+        cdlatex-env-alist-default nil
+        cdlatex-command-alist-default nil
+        )
+(after! lsp-latex
+  (setq lsp-latex-server 'texlab))
 
   ;; Manually map the backslash to the math triggers
   (map! :map cdlatex-mode-map
@@ -230,6 +242,8 @@
 ;; =========================
 ;; Prettier Formatting
 ;; =========================
+(map! "M-q" nil)
+(global-set-key (kbd "M-q") #'ignore)
 
 (use-package! prettier-js
   :hook ((latex-mode . prettier-js-mode)
