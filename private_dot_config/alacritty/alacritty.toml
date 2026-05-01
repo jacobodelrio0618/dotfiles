@@ -4,6 +4,3 @@ size = 11.5
 
 [colors.primary]
 background = "#000000"
-
-[env]
-TERM = "linux"
