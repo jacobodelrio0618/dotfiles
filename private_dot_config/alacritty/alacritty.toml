@@ -1,6 +1,9 @@
 [font]
 normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
-size = 10.5
+size = 11.5
 
 [colors.primary]
 background = "#000000"
+
+[env]
+TERM = "linux"
