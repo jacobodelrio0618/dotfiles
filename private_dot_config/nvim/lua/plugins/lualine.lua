@@ -16,7 +16,7 @@ return {
     local group = vim.api.nvim_create_augroup("VimtexStatus", { clear = true })
 
     vim.api.nvim_create_autocmd("User", {
-      pattern = "VimtexEventCompileStarted",
+      pattern = { "VimtexEventCompileStarted", "VimtexEventCompiling" },
       group = group,
       callback = function()
         _G.vimtex_compile_status_icon = " "

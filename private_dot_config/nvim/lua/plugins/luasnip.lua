@@ -1,8 +1,9 @@
 return {
   "L3MON4D3/LuaSnip",
   opts = {
-    history = true,
+    history = false,
     delete_check_events = "TextChanged",
+    region_check_events = "CursorMoved",
     enable_autosnippets = true,
   },
   config = function(_, opts)

@@ -4,16 +4,18 @@ local t = ls.text_node
 local i = ls.insert_node
 local f = ls.function_node
 local rep = require("luasnip.extras").rep
+
 local in_math = function()
   return vim.fn["vimtex#syntax#in_mathzone"]() == 1
 end
 
+local not_in_math = function()
+  return not in_math()
+end
+
 return {
 
-  -- s("\\1", { t("{"), i(1), t("}"), i(0) }),
-  -- s("\\2", { t("["), i(1), t("]"), i(0) }),
-  -- s("\\3", { t("("), i(1), t(")"), i(0) }),
-  s("\\m", { t("$"), i(1), t("$"), i(0) }),
+  s("\\m", { t("\\("), i(1), t("\\)"), i(0) }),
   s("\\i", { t("\\textit{"), i(1), t("}"), i(0) }),
   s("\\e", { t("\\emph{"), i(1), t("}"), i(0) }),
   s("\\q", { t("\\bsq{"), i(1), t("}"), i(0) }),
@@ -31,7 +33,7 @@ return {
     i(0), -- Final position to keep typing
   }),
 
-  s("bqu", {
+  s("bqo", {
     t({ "\\begin{bqenv}", "" }), -- 1) Comment signs + 2) New line & start
     t("[{{\\autocite["), -- Start of autocite
     i(2), -- Tabstop 2: Page/Postnote
@@ -45,7 +47,7 @@ return {
     t(" %"), -- Comment sign
   }),
 
-  s("tqu", {
+  s("tqo", {
     t({ "%", "\\begin{textqenv}", "  " }), -- 1) Comment + Start + 2 spaces indent
     i(1), -- Tabstop 1: Environment content
     t({ "", "\\end{textqenv}" }), -- End of environment
@@ -53,19 +55,6 @@ return {
     t(" %"), -- Space and comment sign
     t({ "", "%", "" }), -- 5) New line with comment + Final new line
     i(0), -- Tabstop 0: Where you keep typing
-  }),
-  -- BibLaTeX and quotes
-
-  s("bq1", {
-    t({ "", "%", "\\blockquote[{\\autocite[" }),
-    i(2),
-    t("]{"),
-    i(1),
-    t("}}]%"),
-    t({ "", "{" }),
-    i(3),
-    t({ "}.", "%", "" }),
-    i(0),
   }),
 
   s("auc", {
@@ -308,9 +297,33 @@ return {
 }, {
   -- AUTOSNIPPETS TABLE
 
-  -- No Filter
+  -- Normal Mode
+
+  -- s( --
+  --   { trig = "fh", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
+  --   { t("\\textit{"), i(1), t("}"), i(0) }, --
+  --   { condition = not_in_math } --
+  -- ),
   --
+  -- s( --
+  --   { trig = "fj", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
+  --   { t("\\emph{"), i(1), t("}"), i(0) }, --
+  --   { condition = not_in_math } --
+  -- ),
   --
+  -- s( --
+  --   { trig = "fk", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
+  --   { t("\\("), i(1), t("\\)"), i(0) }, --
+  --   { condition = not_in_math }
+  -- ),
+  --
+  -- s( --
+  --   { trig = "fg", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
+  --   { t("\\bsq{"), i(1), t("}"), i(0) } --
+  -- ),
+
+  --No Filter
+
   s( --
     { trig = "°", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
     { t("{"), i(1), t("}"), i(0) } --

@@ -10,6 +10,9 @@ return {
         buffer = { enabled = false },
       },
     },
+    completion = {
+      ghost_text = { enabled = false },
+    },
     -- Keep your luasnip setting as is
     snippets = { preset = "luasnip" },
   },
