@@ -1,19 +1,49 @@
 return {
   "saghen/blink.cmp",
   opts = {
-    sources = {
-      -- 1. This tells blink which sources to try
-      default = { "lsp", "path", "snippets" },
+    -- Insert-mode completion
+    keymap = {
+      preset = "none",
+      ["<Tab>"] = {},
+      ["<S-Tab>"] = {},
+    },
 
-      -- 2. This explicitly disables the buffer provider logic
+    -- Command-line completion
+    cmdline = {
+      keymap = {
+        preset = "none",
+
+        ["<C-J>"] = {},
+        ["<C-K>"] = {},
+      },
+
+      completion = {
+        ghost_text = { enabled = false },
+        menu = {
+          auto_show = true,
+        },
+
+        list = {
+          selection = {
+            preselect = true,
+          },
+        },
+      },
+    },
+
+    sources = {
+      default = { "lsp", "path", "snippets" },
       providers = {
         buffer = { enabled = false },
       },
     },
+
     completion = {
       ghost_text = { enabled = false },
     },
-    -- Keep your luasnip setting as is
-    snippets = { preset = "luasnip" },
+
+    snippets = {
+      preset = "luasnip",
+    },
   },
 }

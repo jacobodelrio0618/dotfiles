@@ -6,13 +6,22 @@ import XMonad.Hooks.ManageDocks
 import XMonad.Util.Run (safeSpawn)
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Util.SpawnOnce 
+import XMonad.Actions.SpawnOn
+import XMonad.Actions.OnScreen
+import Control.Concurrent (threadDelay)
 import XMonad.Actions.Warp
 
 import XMonad.Layout.Spacing
 import XMonad.Layout.NoBorders
+import XMonad.Layout.Combo
+import XMonad.Layout.BinarySpacePartition
+import XMonad.Layout.PerWorkspace
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map       as M
+
+
+import Graphics.X11.ExtraTypes.XF86 (xF86XK_PowerOff)
 
 ------------------------------------------------------------------------
 -- Basic config
@@ -23,7 +32,7 @@ myClickJustFocuses :: Bool
 myClickJustFocuses = True
 myBorderWidth   = 1
 myModMask       = mod4Mask
-myWorkspaces    = ["N","L","A","B","C","6","7","8","9"]
+myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
 myNormalBorderColor  = "#2a2a2a"
 myFocusedBorderColor = "#a9a9a9"
 
@@ -95,17 +104,29 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 --     delta   = 3/100
 
 
-myLayout = avoidStruts $ smartBorders $ spacingRaw True           -- smart border (outer) spacing
-                                  (Border 4 4 6 4) -- screen border gaps: left top right bottom
-                                  True             -- enable screen edge gaps
-                                  (Border 4 4 6 4) -- window gaps: left top right bottom
-                                  True             -- enable window gaps
-                                  (tiled ||| Full)
+-- myLayout = avoidStruts $ smartBorders $ spacingRaw True           -- smart border (outer) spacing
+--                                   (Border 4 4 6 4) -- screen border gaps: left top right bottom
+--                                   True             -- enable screen edge gaps
+--                                   (Border 4 4 6 4) -- window gaps: left top right bottom
+--                                   True             -- enable window gaps
+--                                   (tiled ||| Full)
+--   where
+--     tiled   = Tall nmaster delta ratio
+--     nmaster = 1
+--     ratio   = 1/2
+--     delta   = 3/100
+
+myLayout =
+    avoidStruts $
+    smartBorders $
+    spacingRaw True (Border 4 4 6 4) True (Border 4 4 6 4) True $
+    onWorkspace "2" specialLayout (tiled ||| Full)
   where
-    tiled   = Tall nmaster delta ratio
-    nmaster = 1
-    ratio   = 1/2
-    delta   = 3/100
+    tiled         = Tall nmaster delta ratio
+    specialLayout = Tall 1 delta 0.7
+    nmaster       = 1
+    ratio         = 1/2
+    delta         = 3/100
 ------------------------------------------------------------------------
 -- Window rules
 myManageHook = composeAll
@@ -121,23 +142,75 @@ myEventHook = mempty
 
 ------------------------------------------------------------------------
 -- Startup hook
+-- -- Startup hook
+-- myStartupHook = do
+--     spawn "hsetroot -solid \"#000000\""
+--     -- spawn "killall polybar; sleep 1; polybar -r mainbar &"
+--     spawn "picom --config ~/.config/picom/picom.conf &"
+--     spawn "unclutter -idle 5 &"
+--
+--     -- Monitor setup
+--     spawn ("xrandr | grep -q 'HDMI-A-0 connected' && " ++
+--            "xrandr --output HDMI-A-0 --mode 1920x1080 --rate 180 --right-of eDP --auto || " ++
+--            "xrandr --output HDMI-A-0 --off --output eDP --auto")
+--
+--     spawn "~/.config/polybar/launch.sh"
+--
+--     -- DISABLE SCREEN TIMEOUTS (Wrapped in spawn)
+--     spawn "xset s off s noblank -dpms"
+--
+myStartupHook :: X ()
 myStartupHook = do
-    spawn "hsetroot -solid \"#000000\" &"
-    spawn "export GTK_THEME=Adwaita:dark"
+    spawn "hsetroot -solid \"#000000\""
     -- spawn "killall polybar; sleep 1; polybar -r mainbar &"
-    spawn "picom --config ~/.config/picom/picom.conf &"  -- Picom for rounded corners, shadows
-    
+    spawn "picom --config ~/.config/picom/picom.conf &"
     spawn "unclutter -idle 5 &"
 
--- SMART MONITOR & BAR STARTUP
-    -- This checks if your MSI is connected. 
-    -- If yes: sets up dual screens. If no: resets to laptop only.
+    -- Monitor setup
     spawn ("xrandr | grep -q 'HDMI-A-0 connected' && " ++
            "xrandr --output HDMI-A-0 --mode 1920x1080 --rate 180 --right-of eDP --auto || " ++
            "xrandr --output HDMI-A-0 --off --output eDP --auto")
-           
-    -- Run your Polybar launch script (the one with the for-loop)
+
     spawn "~/.config/polybar/launch.sh"
+
+    -- Disable screen timeouts
+    spawn "xset s off s noblank -dpms"
+
+    -- Startup applications
+    spawnOn "2" "sleep 3; alacritty -e bash -ic 'music'"
+    spawnOn "2" "sleep 1; kitty -e bash -ic 'a'"
+    spawnOn "2" "alacritty -e bash -ic 'l'"
+    spawnOn "4" "alacritty -e nvim"
+    spawnOn "1" "alacritty"
+
+    -- Put workspace 4 on the second monitor
+    io $ threadDelay (5 * 1000000)
+    windows $ viewOnScreen 1 "4"
+    windows $ viewOnScreen 0 "2"
+-- myStartupHook = do
+--     spawn "hsetroot -solid \"#000000\""
+--     -- spawn "killall polybar; sleep 1; polybar -r mainbar &"
+--     spawn "picom --config ~/.config/picom/picom.conf &"
+--     spawn "unclutter -idle 5 &"
+--
+--     -- Monitor setup
+--     spawn ("xrandr | grep -q 'HDMI-A-0 connected' && " ++
+--            "xrandr --output HDMI-A-0 --mode 1920x1080 --rate 180 --right-of eDP --auto || " ++
+--            "xrandr --output HDMI-A-0 --off --output eDP --auto")
+--
+--
+--     spawn "~/.config/polybar/launch.sh"
+--
+--     -- Disable screen timeouts
+--     spawn "xset s off s noblank -dpms"
+--
+--     spawnOn "2" "sleep 3; alacritty -e bash -ic 'music'"
+--     spawnOn "2" "sleep 1; kitty -e bash -ic 'a'"
+--     spawnOn "2" "alacritty -e bash -ic 'l'"
+--     spawnOn "3" "sleep 4; alacritty -e nvim"
+--     spawnOn "1" "alacritty"
+--
+
 ------------------------------------------------------------------------
 -- Main
 main :: IO ()
@@ -157,7 +230,7 @@ defaults = def
     , keys               = myKeys
     , mouseBindings      = myMouseBindings
     , layoutHook         = myLayout
-    , manageHook         = myManageHook
+    , manageHook         = manageSpawn <+> myManageHook
     , handleEventHook    = myEventHook
     , startupHook        = myStartupHook
     }

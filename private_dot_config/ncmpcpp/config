@@ -1,0 +1,8 @@
+colors_enabled = yes
+
+main_window_color = cyan
+header_window_color = cyan
+statusbar_color = white
+statusbar_time_color = cyan
+volume_color = cyan
+progressbar_color = cyan

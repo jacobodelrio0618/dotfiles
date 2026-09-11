@@ -2,8 +2,8 @@ return {
   {
     "rebelot/kanagawa.nvim",
     opts = {
-      theme = "dragon", -- The darkest version
-      background = { dark = "dragon" },
+      theme = "wave", -- The darkest version
+      background = { dark = "wave" },
       colors = {
         theme = {
           all = {
@@ -22,6 +22,6 @@ return {
   },
   {
     "LazyVim/LazyVim",
-    opts = { colorscheme = "kanagawa-dragon" },
+    opts = { colorscheme = "kanagawa-wave" },
   },
 }

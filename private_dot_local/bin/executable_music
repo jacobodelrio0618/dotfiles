@@ -1,0 +1,23 @@
+#!/bin/bash
+
+started_mopidy=false
+
+# Start Mopidy if it isn't already running.
+if ! pgrep -x "mopidy" >/dev/null; then
+  echo "Starting Mopidy server..."
+  mopidy >/dev/null 2>&1 &
+  started_mopidy=true
+
+  # Wait until Mopidy's MPD port is active.
+  while ! nc -z 127.0.0.1 6600 2>/dev/null; do
+    sleep 0.5
+  done
+fi
+
+# Launch the player interface.
+ncmpcpp
+
+# Only stop Mopidy if this script started it.
+if [ "$started_mopidy" = true ]; then
+  killall mopidy 2>/dev/null
+fi

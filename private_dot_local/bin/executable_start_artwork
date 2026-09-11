@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Kill any existing instances
+pkill -f "ncmpcpp" 2>/dev/null
+pkill -f "sptlrx" 2>/dev/null
+
+# Switch to workspace 6 first (using xdotool or wmctrl)
+xdotool key super+6 2>/dev/null || wmctrl -s 5 2>/dev/null
+sleep 0.2
+
+# 1. Master Pane (Left, 70% width)
+alacritty --title "MusicPlayer" -e bash -i -c "$HOME/.local/bin/music" &
+sleep 0.4
+
+# 2. Top-Right Pane
+kitty --title "MusicArtwork" bash -i -c "$HOME/.config/ncmpcpp/show_art.sh" &
+sleep 0.4
+
+# 3. Bottom-Right Pane
+kitty --title "MusicLyrics" bash -i -c "$HOME/go/bin/sptlrx" &

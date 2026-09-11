@@ -15,13 +15,15 @@ end
 
 return {
 
-  s("\\m", { t("\\("), i(1), t("\\)"), i(0) }),
-  s("\\i", { t("\\textit{"), i(1), t("}"), i(0) }),
-  s("\\e", { t("\\emph{"), i(1), t("}"), i(0) }),
-  s("\\q", { t("\\bsq{"), i(1), t("}"), i(0) }),
-
+  s("\\dm", {
+    t({ "", "\\[%" }), -- Start of command
+    t({ "", "  " }), -- New line and 2 spaces of indentation
+    i(1), -- 3) First tabstop (content)
+    t({ "", "\\]%" }), -- New line and end of command
+    i(0), -- 3) Tabstop right beside the closing bracket
+  }),
   -- Environments
-  s("bse", {
+  s("\\bse", {
     t({ "%", "" }), -- 1) Comment sign and 2) New line
     t("\\begin{bsqenv}"), -- Start of environment
     t({ "", "  " }), -- New line and 2 spaces of indentation
@@ -33,7 +35,18 @@ return {
     i(0), -- Final position to keep typing
   }),
 
-  s("bqo", {
+  s("\\ftn", {
+    t({ "", "\\begin{ftnenv}" }), -- Start of environment
+    t({ "", "  " }), -- New line and 2 spaces of indentation
+    i(1), -- 3) First tabstop (content)
+    t({ "", "\\end{ftnenv}" }), -- New line and end of environment
+    i(2), -- 3) Tabstop right beside the closing bracket
+    t(" % "), -- 4) Space and comment sign
+    t({ "", "" }), -- 5) New line
+    i(0), -- Final position to keep typing
+  }),
+
+  s("\\bqo", {
     t({ "\\begin{bqenv}", "" }), -- 1) Comment signs + 2) New line & start
     t("[{{\\autocite["), -- Start of autocite
     i(2), -- Tabstop 2: Page/Postnote
@@ -47,7 +60,7 @@ return {
     t(" %"), -- Comment sign
   }),
 
-  s("tqo", {
+  s("\\tqo", {
     t({ "%", "\\begin{textqenv}", "  " }), -- 1) Comment + Start + 2 spaces indent
     i(1), -- Tabstop 1: Environment content
     t({ "", "\\end{textqenv}" }), -- End of environment
@@ -57,7 +70,9 @@ return {
     i(0), -- Tabstop 0: Where you keep typing
   }),
 
-  s("auc", {
+  -- Commands
+
+  s("\\auc", {
     t({ " %", "\\autocite[" }),
     i(2),
     t("]{"),
@@ -68,20 +83,19 @@ return {
     i(0),
   }),
 
-  s("cfr", {
-    t({ " %", "\\autocite[\\autocap{c}fr. " }),
-    i(1),
+  s("\\cfr", {
+    t({ " %", "\\autocite[\\autocap{c}fr." }),
     t("]["),
-    i(3),
-    t("]{"),
     i(2),
+    t("]{"),
+    i(1),
     t("}"),
-    i(4),
+    i(3),
     t({ "%", "" }),
     i(0),
   }),
 
-  s("ipe", {
+  s("\\ipe", {
     t("\\InitPerson"),
     i(3),
     t("{"),
@@ -92,7 +106,7 @@ return {
     i(0),
   }),
 
-  s("per", {
+  s("\\per", {
     t("\\Person{"),
     i(1),
     t("}"),
@@ -113,6 +127,13 @@ return {
     i(0),
   }),
 
+  s("\\are", {
+    t("\\autoref{"),
+    i(1),
+    t("}"),
+    i(0),
+  }),
+
   -- Subfile Snippet
 
   s("sub", {
@@ -121,18 +142,17 @@ return {
       "\\ifSubfilesClassLoaded{\\addbibresource{../bibliography.bib}}{}",
       "",
       "\\begin{document}",
-      "",
-      "",
+      "  ",
     }),
     i(0),
     t({
-      "",
       "",
       "\\end{document}",
     }),
   }),
 
   -- Beamer Snippets
+
   s("fra", {
     t({ "", "\\begin{frame}" }),
     i(1), -- Title position
@@ -151,7 +171,8 @@ return {
     t({ "", "\\end{block}" }),
   }),
 
-  -- -- Logic - Fitch Proof
+  -- Logic - Fitch Proof
+  --
   -- s("fitch", {
   --   t({ "", "\\begin{align*}", "$\\begin{nd}" }),
   --   t({ "", "    " }),
@@ -182,8 +203,9 @@ return {
   --   i(0),
   --   t({ "", "\\close" }),
   -- }),
-  --
-  -- -- Ebproof synthetic
+
+  -- Ebproof synthetic
+
   -- s("sproof", {
   --   t({
   --     "\\begin{prooftree}",
@@ -297,58 +319,71 @@ return {
 }, {
   -- AUTOSNIPPETS TABLE
 
-  -- Normal Mode
-
-  -- s( --
-  --   { trig = "fh", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
-  --   { t("\\textit{"), i(1), t("}"), i(0) }, --
-  --   { condition = not_in_math } --
-  -- ),
-  --
-  -- s( --
-  --   { trig = "fj", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
-  --   { t("\\emph{"), i(1), t("}"), i(0) }, --
-  --   { condition = not_in_math } --
-  -- ),
-  --
-  -- s( --
-  --   { trig = "fk", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
-  --   { t("\\("), i(1), t("\\)"), i(0) }, --
-  --   { condition = not_in_math }
-  -- ),
-  --
-  -- s( --
-  --   { trig = "fg", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
-  --   { t("\\bsq{"), i(1), t("}"), i(0) } --
-  -- ),
-
   --No Filter
 
+  -- s("\\m", { t("$"), i(1), t("$") }),
+  -- s("\\i", { t("\\textit{"), i(1), t("}") }),
+  -- s("\\e", { t("\\emph{"), i(1), t("}") }),
+  -- s("\\q", { t("\\bsq{"), i(1), t("}") }),
+
+  s({
+    trig = "\\m",
+    snippetType = "autosnippet",
+    wordTrig = false,
+    hidden = true,
+  }, { t("$"), i(1, " "), t("$") }),
+
+  s({
+    trig = "\\is",
+    snippetType = "autosnippet",
+    wordTrig = false,
+    hidden = true,
+  }, { t("\\textit{"), i(1), t("}") }),
+
+  s({
+    trig = "\\es",
+    snippetType = "autosnippet",
+    wordTrig = false,
+    hidden = true,
+  }, { t("\\emph{"), i(1), t("}") }),
+
+  s({
+    trig = "\\q",
+    snippetType = "autosnippet",
+    wordTrig = false,
+    hidden = true,
+  }, { t("\\bsq{"), i(1), t("}") }),
+
   s( --
-    { trig = "°", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
-    { t("{"), i(1), t("}"), i(0) } --
+    { trig = "o0", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
+    { t("ö") } --
   ),
 
   s( --
-    { trig = "ç", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
-    { t("["), i(1), t("]"), i(0) } --
+    { trig = "¹", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
+    { t("{"), i(1), t("}") } --
   ),
 
   s( --
-    { trig = "@", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
-    { t("("), i(1), t(")"), i(0) } --
+    { trig = "²", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
+    { t("["), i(1), t("]") } --
+  ),
+
+  s( --
+    { trig = "³", wordTrig = false, snippetType = "autosnippet", hidden = true }, --
+    { t("("), i(1), t(")") } --
   ),
 
   -- Math Mode
   s(
     { trig = "^", wordTrig = false, snippetType = "autosnippet", hidden = true },
-    { t("^{"), i(1), t("}"), i(0) },
+    { t("^{"), i(1), t("}") },
     { condition = in_math }
   ),
 
   s(
     { trig = "_", wordTrig = false, snippetType = "autosnippet", hidden = true },
-    { t("_{"), i(1), t("}"), i(0) },
+    { t("_{"), i(1), t("}") },
     { condition = in_math }
   ),
 
@@ -360,26 +395,132 @@ return {
   ),
 
   s(
-    { trig = "mc", wordTrig = false, snippetType = "autosnippet", hidden = true },
+    { trig = "mc", wordTrig = false, snippetType = "autosnippet", hidden = false },
     { t("\\mathcal{"), i(1), t("}"), i(0) },
-    { condition = in_math }
+    { --
+      condition = in_math,
+      show_condition = in_math, --
+    }
   ),
 
   s(
-    { trig = "mf", wordTrig = false, snippetType = "autosnippet", hidden = true },
+    { trig = "mf", wordTrig = false, snippetType = "autosnippet", hidden = false },
     { t("\\mathfrak{"), i(1), t("}"), i(0) },
-    { condition = in_math }
+    { --
+      condition = in_math,
+      show_condition = in_math, --
+    }
   ),
 
   s(
-    { trig = "mb", wordTrig = false, snippetType = "autosnippet", hidden = true },
+    { trig = "mb", wordTrig = false, snippetType = "autosnippet", hidden = false },
     { t("\\mathbb{"), i(1), t("}"), i(0) },
-    { condition = in_math }
+    { --
+      condition = in_math,
+      show_condition = in_math, --
+    }
   ),
 
   s(
-    { trig = "ms", wordTrig = false, snippetType = "autosnippet", hidden = true },
+    { trig = "ms", wordTrig = false, snippetType = "autosnippet", hidden = false },
     { t("\\mathsf{"), i(1), t("}"), i(0) },
-    { condition = in_math }
+    { --
+      condition = in_math,
+      show_condition = in_math, --
+    }
   ),
+
+  s({ trig = "zf", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\mathrm{ZF}"), i(0) }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
+
+  s( --
+    { trig = "pa", wordTrig = false, snippetType = "autosnippet", hidden = false }, --
+    { t("\\mathrm{PA}"), i(0) },
+    { --
+      condition = in_math,
+      show_condition = in_math, --
+    }
+  ),
+
+  s({ trig = "al", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\alpha"), i(0) }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
+
+  s({ trig = "ph", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\phi"), i(0) }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
+
+  s({ trig = "ps", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\psi"), i(0) }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
+
+  s({ trig = "om", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\omega"), i(0) }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
+
+  s({ trig = "fa", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\fall"), i(0) }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
+
+  s({ trig = "eg", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\fexists"), i(0) }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
+
+  s({ trig = "ln", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\lnot"), i(0) }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
+
+  s({ trig = "la", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\land"), i(0) }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
+
+  s({ trig = "lo", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\lor"), i(0) }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
+
+  s({ trig = "ne", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\neq"), i(0) }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
+
+  s({ trig = "al", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\alpha"), i(0) }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
+
+  s({ trig = "geq", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\geqslant"), i(0) }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
+
+  s({ trig = "leq", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\leqslant"), i(0) }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
+
+  s({ trig = "bx", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\bar{x}") }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
+
+  s({ trig = "by", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\bar{y}") }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
+
+  s({ trig = "...", wordTrig = false, snippetType = "autosnippet", hidden = false }, { t("\\dots") }, { --
+    condition = in_math,
+    show_condition = in_math, --
+  }),
 }
